@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script type="importmap">
+    {
+      "imports": {
+        "@hotwired/stimulus": "/node_modules/@hotwired/stimulus/dist/stimulus.js",
+        "@kanety/stimulus-uploader": "/dist/index.module.js"
+      }
+    }
+  </script>
+  <script type="module">
+    import { Application, Controller } from '@hotwired/stimulus';
+    import UploaderController from '@kanety/stimulus-uploader';
+    const application = Application.start();
+    application.register('uploader', UploaderController);
+    UploaderController.params = { token: 'secrets' }
+    UploaderController.fetchOptions = { referrer: 'something' }
+  </script>
+  <link rel="stylesheet" href="/dist/index.css"></link>
+</head>
+<body>
+  <h1>Params</h1>
+  <div class="st-uploader"
+       data-controller="uploader"
+       data-uploader-url-value="/post"
+       data-uploader-method-value="post"
+       data-uploader-params-value='{"key":"value"}'
+       data-uploader-fetch-options-value='{"headers":{"key":"value"}}'>
+    <input type="file" name="file" multiple="true" data-action="uploader#run">
+    <div class="st-uploader__progress" data-uploader-target="progress"></div>
+  </div>
+  <script>
+    let element = document.querySelector('[data-controller="uploader"]');
+    element.addEventListener('uploader:done', e => {
+      alert(e.detail.file.name + ' uploaded!');
+    });
+  </script>
+</body>
+</html>
